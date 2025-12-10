@@ -31,8 +31,7 @@ export default function Particles() {
       constructor() {
         this.x = Math.random() * (canvas?.width || 0);
         this.y = Math.random() * (canvas?.height || 0);
-        // Speed: Lower is slower/smoother
-        this.directionX = (Math.random() * 0.4) - 0.2; 
+        this.directionX = (Math.random() * 0.4) - 0.2; // Gentle float speed
         this.directionY = (Math.random() * 0.4) - 0.2;
         this.size = Math.random() * 2;
         this.color = '#DC2626'; // Red nodes
@@ -48,7 +47,6 @@ export default function Particles() {
 
       update() {
         if (!canvas) return;
-        // Bounce off edges
         if (this.x > canvas.width || this.x < 0) this.directionX = -this.directionX;
         if (this.y > canvas.height || this.y < 0) this.directionY = -this.directionY;
 
@@ -60,7 +58,7 @@ export default function Particles() {
 
     function init() {
       particlesArray = [];
-      const numberOfParticles = (window.innerWidth * window.innerHeight) / 9000; // Density
+      const numberOfParticles = (window.innerWidth * window.innerHeight) / 9000;
       for (let i = 0; i < numberOfParticles; i++) {
         particlesArray.push(new Particle());
       }
@@ -77,18 +75,16 @@ export default function Particles() {
       animationFrameId = requestAnimationFrame(animate);
     }
 
-    // Connect particles with lines if close enough
     function connect() {
       if (!canvas || !ctx) return;
-      let opacityValue = 1;
       for (let a = 0; a < particlesArray.length; a++) {
         for (let b = a; b < particlesArray.length; b++) {
-          let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x)) +
-                         ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+          let distance = ((particlesArray[a].x - particlesArray[b].x) ** 2) + 
+                         ((particlesArray[a].y - particlesArray[b].y) ** 2);
           
           if (distance < (canvas.width / 7) * (canvas.height / 7)) {
-            opacityValue = 1 - (distance / 20000);
-            ctx.strokeStyle = `rgba(220, 38, 38, ${opacityValue})`; // Red lines
+            let opacityValue = 1 - (distance / 20000);
+            ctx.strokeStyle = `rgba(220, 38, 38, ${opacityValue})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
@@ -100,7 +96,7 @@ export default function Particles() {
     }
 
     window.addEventListener('resize', handleResize);
-    handleResize();
+    init();
     animate();
 
     return () => {
@@ -112,8 +108,7 @@ export default function Particles() {
   return (
     <canvas 
       ref={canvasRef} 
-      className="absolute inset-0 z-0 bg-neutral-950"
-      style={{ width: '100%', height: '100%' }}
+      className="fixed top-0 left-0 w-full h-full pointer-events-none z-0"
     />
   );
 }
