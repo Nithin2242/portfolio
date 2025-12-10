@@ -3,7 +3,7 @@
 import { motion, Variants } from 'framer-motion';
 
 export default function Home() {
-  // Fixed: Added ': Variants' type to satisfy TypeScript
+  // Fixed: Added ': Variants' type so TypeScript stops complaining
   const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: { 
@@ -22,10 +22,11 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-gray-200 font-sans selection:bg-red-500 selection:text-white">
+    // UPDATED BACKGROUND: Deep neutral with a subtle red spotlight at the top
+    <div className="min-h-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,0,0,0.3),rgba(255,255,255,0))] text-gray-200 font-sans selection:bg-red-500 selection:text-white">
       
       {/* Navigation Bar */}
-      <header className="fixed top-0 w-full bg-black/80 backdrop-blur-md border-b border-red-900/30 z-50">
+      <header className="fixed top-0 w-full bg-neutral-950/80 backdrop-blur-md border-b border-red-900/20 z-50">
         <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
           <motion.h1 
             initial={{ opacity: 0, x: -20 }}
@@ -55,8 +56,9 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="mb-8 relative inline-block"
           >
-            <div className="w-32 h-32 rounded-full border-4 border-red-600 shadow-[0_0_30px_rgba(220,38,38,0.5)] overflow-hidden mx-auto bg-neutral-900">
-               {/* Make sure profile.jpg exists in public folder or this will be blank */}
+            {/* Added a subtle glow behind the image */}
+            <div className="absolute inset-0 bg-red-600 blur-2xl opacity-20 rounded-full"></div>
+            <div className="relative w-32 h-32 rounded-full border-4 border-red-600/50 shadow-2xl overflow-hidden mx-auto bg-neutral-900">
                <img src="/profile.jpg" alt="Profile" className="w-full h-full object-cover opacity-90 hover:opacity-100 transition" />
             </div>
           </motion.div>
@@ -86,12 +88,11 @@ export default function Home() {
             transition={{ delay: 0.5 }}
             className="flex flex-col md:flex-row justify-center gap-4 items-center"
           >
-            <a href="#contact" className="px-8 py-3 bg-red-600 text-white rounded-full font-bold hover:bg-red-700 hover:shadow-[0_0_20px_rgba(220,38,38,0.6)] transition duration-300">
+            <a href="#contact" className="px-8 py-3 bg-red-600 text-white rounded-full font-bold hover:bg-red-700 hover:shadow-[0_0_20px_rgba(220,38,38,0.4)] transition duration-300">
               Contact Me
             </a>
 
-            {/* Resume Button */}
-            <a href="/resume.pdf" download className="px-8 py-3 border border-red-600 text-red-500 rounded-full font-bold hover:bg-red-600 hover:text-white transition duration-300 flex items-center gap-2 group">
+            <a href="/resume.pdf" download className="px-8 py-3 border border-red-600/50 text-red-400 rounded-full font-bold hover:bg-red-600 hover:text-white hover:border-red-600 transition duration-300 flex items-center gap-2 group bg-neutral-900/50 backdrop-blur-sm">
               <span>Download Resume</span>
               <svg className="w-4 h-4 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
             </a>
@@ -100,7 +101,7 @@ export default function Home() {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-24 bg-neutral-950">
+      <section id="skills" className="py-24 bg-neutral-950/50">
         <div className="max-w-5xl mx-auto px-6">
           <motion.h3 
             initial={{ opacity: 0 }}
@@ -126,7 +127,7 @@ export default function Home() {
               <motion.div 
                 key={index}
                 variants={fadeInUp}
-                className="bg-neutral-900 p-8 rounded-2xl border border-neutral-800 hover:border-red-600 transition duration-300 hover:-translate-y-2"
+                className="bg-neutral-900/50 p-8 rounded-2xl border border-neutral-800 hover:border-red-600/50 transition duration-300 hover:-translate-y-2 backdrop-blur-sm"
               >
                 <h4 className="text-xl font-bold text-red-500 mb-4">{skill.title}</h4>
                 <p className="text-gray-400">{skill.skills}</p>
@@ -137,7 +138,7 @@ export default function Home() {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-24 bg-black">
+      <section id="projects" className="py-24 bg-neutral-950">
         <div className="max-w-5xl mx-auto px-6">
           <motion.h3 
             initial={{ opacity: 0 }}
@@ -174,9 +175,10 @@ export default function Home() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.6 }}
-                className="group relative bg-neutral-900 rounded-2xl p-8 border border-neutral-800 hover:border-red-900 overflow-hidden"
+                className="group relative bg-neutral-900/50 rounded-2xl p-8 border border-neutral-800 hover:border-red-900/50 overflow-hidden backdrop-blur-sm"
               >
-                <div className="absolute top-0 right-0 w-32 h-32 bg-red-600 blur-[100px] opacity-20 group-hover:opacity-40 transition duration-500"></div>
+                {/* Gradient Glow Effect on Hover */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-[80px] rounded-full group-hover:bg-red-600/20 transition duration-500"></div>
                 
                 <div className="flex flex-col md:flex-row justify-between items-start mb-6 relative z-10">
                   <div>
@@ -203,12 +205,12 @@ export default function Home() {
       </section>
 
       {/* Certifications Section */}
-      <section className="py-20 bg-neutral-950">
+      <section className="py-20 bg-neutral-950/50">
          <div className="max-w-5xl mx-auto px-6 text-center">
           <h3 className="text-2xl font-bold mb-10 text-white">Certifications</h3>
           <div className="flex flex-wrap justify-center gap-4">
             {['Data Analytics (Infosys)', 'AWS APAC Solutions Architecture', 'Web Development (Fliprlabs)', 'Data Analytics (Deloitte)'].map((cert) => (
-              <span key={cert} className="bg-neutral-900 border border-neutral-800 px-6 py-3 rounded-xl text-gray-300 font-medium hover:border-red-600 hover:text-red-500 transition duration-300">
+              <span key={cert} className="bg-neutral-900/80 border border-neutral-800 px-6 py-3 rounded-xl text-gray-300 font-medium hover:border-red-600/50 hover:text-red-500 transition duration-300">
                 {cert}
               </span>
             ))}
@@ -217,7 +219,7 @@ export default function Home() {
       </section>
 
       {/* Contact Section */}
-      <section id="contact" className="py-24 bg-gradient-to-b from-black to-red-950 text-white text-center">
+      <section id="contact" className="py-24 bg-gradient-to-b from-neutral-950 to-red-950/20 text-white text-center">
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
@@ -239,7 +241,7 @@ export default function Home() {
         </motion.div>
       </section>
 
-      <footer className="bg-black text-neutral-600 py-8 text-center text-sm border-t border-neutral-900">
+      <footer className="bg-neutral-950 text-neutral-600 py-8 text-center text-sm border-t border-neutral-900">
         <p>&copy; {new Date().getFullYear()} Nithin NS. Designed with Next.js & Framer Motion.</p>
       </footer>
     </div>
