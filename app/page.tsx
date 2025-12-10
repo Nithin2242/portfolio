@@ -3,7 +3,7 @@
 import { motion, Variants } from 'framer-motion';
 
 export default function Home() {
-  // Fixed: Added ': Variants' type so TypeScript stops complaining
+  // Animation settings
   const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
     visible: { 
@@ -22,7 +22,7 @@ export default function Home() {
   };
 
   return (
-    // UPDATED BACKGROUND: Deep neutral with a subtle red spotlight at the top
+    // Background: Deep neutral with a subtle red spotlight at the top
     <div className="min-h-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,0,0,0.3),rgba(255,255,255,0))] text-gray-200 font-sans selection:bg-red-500 selection:text-white">
       
       {/* Navigation Bar */}
@@ -56,7 +56,7 @@ export default function Home() {
             transition={{ duration: 0.5 }}
             className="mb-8 relative inline-block"
           >
-            {/* Added a subtle glow behind the image */}
+            {/* Glow effect */}
             <div className="absolute inset-0 bg-red-600 blur-2xl opacity-20 rounded-full"></div>
             <div className="relative w-32 h-32 rounded-full border-4 border-red-600/50 shadow-2xl overflow-hidden mx-auto bg-neutral-900">
                <img src="/profile.jpg" alt="Profile" className="w-full h-full object-cover opacity-90 hover:opacity-100 transition" />
@@ -72,14 +72,14 @@ export default function Home() {
             I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">Nithin NS</span>
           </motion.h2>
 
+          {/* UPDATED TEXT LINE HERE */}
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.3, duration: 1 }}
             className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed"
           >
-            Electronics & Communication Engineer transforming raw data into 
-            <span className="text-red-500 font-semibold"> actionable insights</span>.
+            Electronics & Communication Engineer <span className="text-red-500 font-semibold">at BMS Institute of Technology and Management</span>.
           </motion.p>
           
           <motion.div 
@@ -177,7 +177,6 @@ export default function Home() {
                 transition={{ duration: 0.6 }}
                 className="group relative bg-neutral-900/50 rounded-2xl p-8 border border-neutral-800 hover:border-red-900/50 overflow-hidden backdrop-blur-sm"
               >
-                {/* Gradient Glow Effect on Hover */}
                 <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-[80px] rounded-full group-hover:bg-red-600/20 transition duration-500"></div>
                 
                 <div className="flex flex-col md:flex-row justify-between items-start mb-6 relative z-10">
