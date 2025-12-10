@@ -1,7 +1,48 @@
 'use client';
 
-import { motion, Variants } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, Variants } from 'framer-motion';
 
+// --- 3D TILT CARD COMPONENT ---
+function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
+  const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
+
+  function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top, width, height } = currentTarget.getBoundingClientRect();
+    const xPct = (clientX - left) / width - 0.5;
+    const yPct = (clientY - top) / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  }
+
+  function onMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [7, -7]); // Tilt up/down
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-7, 7]); // Tilt left/right
+  const brightness = useTransform(mouseY, [-0.5, 0.5], [1.1, 0.9]); // Fake lighting
+
+  return (
+    <motion.div
+      onMouseMove={onMouseMove}
+      onMouseLeave={onMouseLeave}
+      style={{ rotateX, rotateY, filter: `brightness(${brightness})`, transformStyle: "preserve-3d" }}
+      className={`relative transition-all duration-200 ease-linear ${className}`}
+    >
+      <div style={{ transform: "translateZ(50px)" }}>
+        {children}
+      </div>
+    </motion.div>
+  );
+}
+
+// --- MAIN PAGE ---
 export default function Home() {
   const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
@@ -21,25 +62,16 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-gray-200 font-sans selection:bg-red-500 selection:text-white relative overflow-hidden">
+    <div className="min-h-screen bg-neutral-950 text-gray-200 font-sans selection:bg-red-500 selection:text-white relative overflow-hidden perspective-1000">
       
-      {/* --- BACKGROUND LAYERS --- */}
-      
-      {/* Layer 1: The Technical Grid Pattern */}
+      {/* Background Layers */}
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none"
-           style={{
-             backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)',
-             backgroundSize: '30px 30px'
-           }}
-      ></div>
-
-      {/* Layer 2: The Red Spotlight Fade */}
+           style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
       <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,0,0,0.4),rgba(255,255,255,0))] pointer-events-none"></div>
 
-      {/* --- MAIN CONTENT (Wrapped in z-10 to stay above background) --- */}
       <div className="relative z-10">
-
-        {/* Navigation Bar */}
+        
+        {/* Navigation */}
         <header className="fixed top-0 w-full bg-neutral-950/80 backdrop-blur-md border-b border-red-900/20 z-50">
           <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
             <motion.h1 
@@ -63,24 +95,30 @@ export default function Home() {
         <section id="about" className="min-h-screen flex items-center justify-center pt-20">
           <div className="max-w-5xl mx-auto px-6 text-center">
             
-            {/* Profile Image */}
+            {/* 3D Floating Profile Image */}
             <motion.div 
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5 }}
-              className="mb-8 relative inline-block"
+              className="mb-8 relative inline-block perspective-1000"
             >
-              <div className="absolute inset-0 bg-red-600 blur-2xl opacity-20 rounded-full"></div>
-              <div className="relative w-32 h-32 rounded-full border-4 border-red-600/50 shadow-2xl overflow-hidden mx-auto bg-neutral-900">
-                <img src="/profile.jpg" alt="Profile" className="w-full h-full object-cover opacity-90 hover:opacity-100 transition" />
-              </div>
+              {/* Floating Animation */}
+              <motion.div
+                animate={{ y: [0, -15, 0], rotateY: [0, 5, 0] }}
+                transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <div className="absolute inset-0 bg-red-600 blur-3xl opacity-20 rounded-full"></div>
+                <div className="relative w-40 h-40 rounded-full border-4 border-red-600/50 shadow-2xl overflow-hidden mx-auto bg-neutral-900">
+                  <img src="/profile.jpg" alt="Profile" className="w-full h-full object-cover" />
+                </div>
+              </motion.div>
             </motion.div>
 
             <motion.h2 
               initial="hidden"
               animate="visible"
               variants={fadeInUp}
-              className="text-5xl md:text-7xl font-extrabold mb-6 text-white tracking-tight"
+              className="text-5xl md:text-8xl font-extrabold mb-6 text-white tracking-tight"
             >
               I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">Nithin NS</span>
             </motion.h2>
@@ -100,11 +138,10 @@ export default function Home() {
               transition={{ delay: 0.5 }}
               className="flex flex-col md:flex-row justify-center gap-4 items-center"
             >
-              <a href="#contact" className="px-8 py-3 bg-red-600 text-white rounded-full font-bold hover:bg-red-700 hover:shadow-[0_0_20px_rgba(220,38,38,0.4)] transition duration-300">
+              <a href="#contact" className="px-8 py-3 bg-red-600 text-white rounded-full font-bold hover:bg-red-700 hover:scale-105 transition duration-300 shadow-[0_0_20px_rgba(220,38,38,0.4)]">
                 Contact Me
               </a>
-
-              <a href="/resume.pdf" download className="px-8 py-3 border border-red-600/50 text-red-400 rounded-full font-bold hover:bg-red-600 hover:text-white hover:border-red-600 transition duration-300 flex items-center gap-2 group bg-neutral-900/50 backdrop-blur-sm">
+              <a href="/resume.pdf" download className="px-8 py-3 border border-red-600/50 text-red-400 rounded-full font-bold hover:bg-red-600 hover:text-white hover:scale-105 transition duration-300 flex items-center gap-2 group bg-neutral-900/50 backdrop-blur-sm">
                 <span>Download Resume</span>
                 <svg className="w-4 h-4 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
               </a>
@@ -113,7 +150,7 @@ export default function Home() {
         </section>
 
         {/* Skills Section */}
-        <section id="skills" className="py-24 bg-neutral-950/50">
+        <section id="skills" className="py-24">
           <div className="max-w-5xl mx-auto px-6">
             <motion.h3 
               initial={{ opacity: 0 }}
@@ -136,21 +173,20 @@ export default function Home() {
                 { title: "Data Visualization", skills: "Power BI, Tableau, Excel, DAX" },
                 { title: "Soft Skills", skills: "Analytical Mindset, Problem Solving" }
               ].map((skill, index) => (
-                <motion.div 
+                <TiltCard 
                   key={index}
-                  variants={fadeInUp}
-                  className="bg-neutral-900/50 p-8 rounded-2xl border border-neutral-800 hover:border-red-600/50 transition duration-300 hover:-translate-y-2 backdrop-blur-sm"
+                  className="bg-neutral-900/50 p-8 rounded-2xl border border-neutral-800 hover:border-red-600/50 backdrop-blur-sm"
                 >
                   <h4 className="text-xl font-bold text-red-500 mb-4">{skill.title}</h4>
                   <p className="text-gray-400">{skill.skills}</p>
-                </motion.div>
+                </TiltCard>
               ))}
             </motion.div>
           </div>
         </section>
 
-        {/* Projects Section */}
-        <section id="projects" className="py-24 bg-transparent">
+        {/* Projects Section - NOW WITH 3D TILT */}
+        <section id="projects" className="py-24">
           <div className="max-w-5xl mx-auto px-6">
             <motion.h3 
               initial={{ opacity: 0 }}
@@ -181,15 +217,11 @@ export default function Home() {
                   year: "Ongoing"
                 }
               ].map((project, index) => (
-                <motion.div 
+                <TiltCard 
                   key={index}
-                  initial={{ opacity: 0, x: -50 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.6 }}
-                  className="group relative bg-neutral-900/80 rounded-2xl p-8 border border-neutral-800 hover:border-red-900/50 overflow-hidden backdrop-blur-sm"
+                  className="group bg-neutral-900/80 rounded-2xl p-8 border border-neutral-800 hover:border-red-900/50 backdrop-blur-sm"
                 >
-                  <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-[80px] rounded-full group-hover:bg-red-600/20 transition duration-500"></div>
+                  <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-[80px] rounded-full group-hover:bg-red-600/20 transition duration-500 pointer-events-none"></div>
                   
                   <div className="flex flex-col md:flex-row justify-between items-start mb-6 relative z-10">
                     <div>
@@ -209,19 +241,19 @@ export default function Home() {
                       </li>
                     ))}
                   </ul>
-                </motion.div>
+                </TiltCard>
               ))}
             </div>
           </div>
         </section>
 
-        {/* Certifications Section */}
+        {/* Certifications & Contact */}
         <section className="py-20 bg-neutral-950/50">
            <div className="max-w-5xl mx-auto px-6 text-center">
             <h3 className="text-2xl font-bold mb-10 text-white">Certifications</h3>
             <div className="flex flex-wrap justify-center gap-4">
               {['Data Analytics (Infosys)', 'AWS APAC Solutions Architecture', 'Web Development (Fliprlabs)', 'Data Analytics (Deloitte)'].map((cert) => (
-                <span key={cert} className="bg-neutral-900/80 border border-neutral-800 px-6 py-3 rounded-xl text-gray-300 font-medium hover:border-red-600/50 hover:text-red-500 transition duration-300">
+                <span key={cert} className="bg-neutral-900/80 border border-neutral-800 px-6 py-3 rounded-xl text-gray-300 font-medium hover:border-red-600/50 hover:text-red-500 hover:scale-105 transition duration-300 cursor-default">
                   {cert}
                 </span>
               ))}
@@ -229,7 +261,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Contact Section */}
         <section id="contact" className="py-24 bg-gradient-to-b from-neutral-950 to-red-950/20 text-white text-center">
           <motion.div 
             initial={{ opacity: 0, scale: 0.9 }}
