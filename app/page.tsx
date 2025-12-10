@@ -27,6 +27,11 @@ export default function Home() {
             <a href="#contact" className="px-8 py-3 bg-blue-700 text-white rounded-full font-semibold hover:bg-blue-800 transition shadow-lg">
               Contact Me
             </a>
+            {/* Resume Button */}
+          <a href="/resume.pdf" download className="px-8 py-3 bg-white text-blue-700 border-2 border-blue-700 rounded-full font-semibold hover:bg-blue-50 transition shadow-lg flex items-center gap-2">
+            <span>Download Resume</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          </a>
             <a href="https://linkedin.com/in/nithin-n-s-23b3ba290" target="_blank" className="px-8 py-3 border border-gray-300 rounded-full font-semibold hover:bg-gray-100 transition">
               LinkedIn
             </a>
