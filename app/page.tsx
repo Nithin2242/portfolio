@@ -1,14 +1,13 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React from 'react';
 import { motion, useMotionValue, useSpring, useTransform, Variants } from 'framer-motion';
+import Particles from './Particles'; // Importing your new 3D animation
 
-// --- 3D TILT CARD COMPONENT (Fixed) ---
+// --- 3D TILT CARD COMPONENT ---
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-
-  // Physics settings: Stiffness handles how "snappy" the tilt is
   const mouseX = useSpring(x, { stiffness: 150, damping: 15 });
   const mouseY = useSpring(y, { stiffness: 150, damping: 15 });
 
@@ -25,19 +24,17 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
     y.set(0);
   }
 
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [15, -15]); // Increased tilt angle
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-15, 15]); // Increased tilt angle
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [15, -15]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-15, 15]);
 
   return (
     <motion.div
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
       style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
-      className={`relative ${className}`} // REMOVED the conflicting transition class
+      className={`relative ${className}`}
     >
-      <div style={{ transform: "translateZ(20px)" }}>
-        {children}
-      </div>
+      <div style={{ transform: "translateZ(20px)" }}>{children}</div>
     </motion.div>
   );
 }
@@ -64,15 +61,18 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-neutral-950 text-gray-200 font-sans selection:bg-red-500 selection:text-white relative overflow-hidden perspective-1000">
       
-      {/* Background Layers */}
-      <div className="absolute inset-0 z-0 opacity-20 pointer-events-none"
-           style={{ backgroundImage: 'linear-gradient(#333 1px, transparent 1px), linear-gradient(90deg, #333 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,0,0,0.4),rgba(255,255,255,0))] pointer-events-none"></div>
+      {/* --- NEW 3D BACKGROUND ANIMATION --- */}
+      <div className="absolute inset-0 z-0">
+         <Particles />
+      </div>
+      
+      {/* Overlay to darken it slightly so text is readable */}
+      <div className="absolute inset-0 z-0 bg-neutral-950/80 pointer-events-none"></div>
 
       <div className="relative z-10">
         
         {/* Navigation */}
-        <header className="fixed top-0 w-full bg-neutral-950/80 backdrop-blur-md border-b border-red-900/20 z-50">
+        <header className="fixed top-0 w-full bg-neutral-950/70 backdrop-blur-md border-b border-red-900/20 z-50">
           <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
             <motion.h1 
               initial={{ opacity: 0, x: -20 }}
@@ -95,14 +95,12 @@ export default function Home() {
         <section id="about" className="min-h-screen flex items-center justify-center pt-20">
           <div className="max-w-5xl mx-auto px-6 text-center">
             
-            {/* 3D Floating Profile Image */}
             <motion.div 
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.5 }}
               className="mb-8 relative inline-block perspective-1000"
             >
-              {/* Floating Animation */}
               <motion.div
                 animate={{ y: [0, -15, 0], rotateY: [0, 5, 0] }}
                 transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -149,7 +147,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Skills Section - NOW WITH WORKING TILT */}
+        {/* Skills Section */}
         <section id="skills" className="py-24">
           <div className="max-w-5xl mx-auto px-6">
             <motion.h3 
@@ -175,7 +173,7 @@ export default function Home() {
               ].map((skill, index) => (
                 <TiltCard 
                   key={index}
-                  className="bg-neutral-900/50 p-8 rounded-2xl border border-neutral-800 hover:border-red-600/50 backdrop-blur-sm"
+                  className="bg-neutral-900/40 p-8 rounded-2xl border border-neutral-800 hover:border-red-600/50 backdrop-blur-sm"
                 >
                   <h4 className="text-xl font-bold text-red-500 mb-4">{skill.title}</h4>
                   <p className="text-gray-400">{skill.skills}</p>
@@ -185,7 +183,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Projects Section - NOW WITH WORKING TILT */}
+        {/* Projects Section */}
         <section id="projects" className="py-24">
           <div className="max-w-5xl mx-auto px-6">
             <motion.h3 
@@ -219,7 +217,7 @@ export default function Home() {
               ].map((project, index) => (
                 <TiltCard 
                   key={index}
-                  className="group bg-neutral-900/80 rounded-2xl p-8 border border-neutral-800 hover:border-red-900/50 backdrop-blur-sm"
+                  className="group bg-neutral-900/60 rounded-2xl p-8 border border-neutral-800 hover:border-red-900/50 backdrop-blur-sm"
                 >
                   <div className="absolute top-0 right-0 w-64 h-64 bg-red-600/10 blur-[80px] rounded-full group-hover:bg-red-600/20 transition duration-500 pointer-events-none"></div>
                   
@@ -248,7 +246,7 @@ export default function Home() {
         </section>
 
         {/* Certifications & Contact */}
-        <section className="py-20 bg-neutral-950/50">
+        <section className="py-20 bg-neutral-950/40">
            <div className="max-w-5xl mx-auto px-6 text-center">
             <h3 className="text-2xl font-bold mb-10 text-white">Certifications</h3>
             <div className="flex flex-wrap justify-center gap-4">
