@@ -3,13 +3,14 @@
 import React, { useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, Variants } from 'framer-motion';
 
-// --- 3D TILT CARD COMPONENT ---
+// --- 3D TILT CARD COMPONENT (Fixed) ---
 function TiltCard({ children, className }: { children: React.ReactNode; className?: string }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
-  const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
+  // Physics settings: Stiffness handles how "snappy" the tilt is
+  const mouseX = useSpring(x, { stiffness: 150, damping: 15 });
+  const mouseY = useSpring(y, { stiffness: 150, damping: 15 });
 
   function onMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
     const { left, top, width, height } = currentTarget.getBoundingClientRect();
@@ -24,18 +25,17 @@ function TiltCard({ children, className }: { children: React.ReactNode; classNam
     y.set(0);
   }
 
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [7, -7]); // Tilt up/down
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-7, 7]); // Tilt left/right
-  const brightness = useTransform(mouseY, [-0.5, 0.5], [1.1, 0.9]); // Fake lighting
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [15, -15]); // Increased tilt angle
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-15, 15]); // Increased tilt angle
 
   return (
     <motion.div
       onMouseMove={onMouseMove}
       onMouseLeave={onMouseLeave}
-      style={{ rotateX, rotateY, filter: `brightness(${brightness})`, transformStyle: "preserve-3d" }}
-      className={`relative transition-all duration-200 ease-linear ${className}`}
+      style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}
+      className={`relative ${className}`} // REMOVED the conflicting transition class
     >
-      <div style={{ transform: "translateZ(50px)" }}>
+      <div style={{ transform: "translateZ(20px)" }}>
         {children}
       </div>
     </motion.div>
@@ -149,7 +149,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Skills Section */}
+        {/* Skills Section - NOW WITH WORKING TILT */}
         <section id="skills" className="py-24">
           <div className="max-w-5xl mx-auto px-6">
             <motion.h3 
@@ -185,7 +185,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Projects Section - NOW WITH 3D TILT */}
+        {/* Projects Section - NOW WITH WORKING TILT */}
         <section id="projects" className="py-24">
           <div className="max-w-5xl mx-auto px-6">
             <motion.h3 
