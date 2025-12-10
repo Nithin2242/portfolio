@@ -1,15 +1,19 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, Variants } from 'framer-motion';
 
 export default function Home() {
-  // Animation settings
-  const fadeInUp = {
+  // Fixed: Added ': Variants' type to satisfy TypeScript
+  const fadeInUp: Variants = {
     hidden: { opacity: 0, y: 40 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    visible: { 
+      opacity: 1, 
+      y: 0, 
+      transition: { duration: 0.8, ease: "easeOut" } 
+    }
   };
 
-  const staggerContainer = {
+  const staggerContainer: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
@@ -44,7 +48,7 @@ export default function Home() {
       <section id="about" className="min-h-screen flex items-center justify-center pt-20">
         <div className="max-w-5xl mx-auto px-6 text-center">
           
-          {/* Profile Image (Optional - ensure profile.jpg is in public folder) */}
+          {/* Profile Image */}
           <motion.div 
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
@@ -52,7 +56,7 @@ export default function Home() {
             className="mb-8 relative inline-block"
           >
             <div className="w-32 h-32 rounded-full border-4 border-red-600 shadow-[0_0_30px_rgba(220,38,38,0.5)] overflow-hidden mx-auto bg-neutral-900">
-               {/* Make sure you have a photo named profile.jpg in your public folder, or delete this img tag */}
+               {/* Make sure profile.jpg exists in public folder or this will be blank */}
                <img src="/profile.jpg" alt="Profile" className="w-full h-full object-cover opacity-90 hover:opacity-100 transition" />
             </div>
           </motion.div>
@@ -86,7 +90,7 @@ export default function Home() {
               Contact Me
             </a>
 
-            {/* RESUME BUTTON IS HERE */}
+            {/* Resume Button */}
             <a href="/resume.pdf" download className="px-8 py-3 border border-red-600 text-red-500 rounded-full font-bold hover:bg-red-600 hover:text-white transition duration-300 flex items-center gap-2 group">
               <span>Download Resume</span>
               <svg className="w-4 h-4 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
@@ -183,3 +187,61 @@ export default function Home() {
                     {project.year}
                   </span>
                 </div>
+                
+                <ul className="space-y-3 relative z-10">
+                  {project.desc.map((point, i) => (
+                    <li key={i} className="flex items-start text-gray-400">
+                      <span className="mr-3 text-red-600">▹</span>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Certifications Section */}
+      <section className="py-20 bg-neutral-950">
+         <div className="max-w-5xl mx-auto px-6 text-center">
+          <h3 className="text-2xl font-bold mb-10 text-white">Certifications</h3>
+          <div className="flex flex-wrap justify-center gap-4">
+            {['Data Analytics (Infosys)', 'AWS APAC Solutions Architecture', 'Web Development (Fliprlabs)', 'Data Analytics (Deloitte)'].map((cert) => (
+              <span key={cert} className="bg-neutral-900 border border-neutral-800 px-6 py-3 rounded-xl text-gray-300 font-medium hover:border-red-600 hover:text-red-500 transition duration-300">
+                {cert}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-24 bg-gradient-to-b from-black to-red-950 text-white text-center">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+        >
+          <h2 className="text-4xl font-bold mb-6">Let's Connect</h2>
+          <p className="mb-10 max-w-xl mx-auto text-gray-300">
+            Ready to bring data-driven insights to your team.
+          </p>
+          <div className="space-y-4 text-lg">
+            <p className="font-semibold text-red-400">nithinns1402@gmail.com</p>
+            <p className="font-semibold">+91-6364348530</p>
+            <div className="flex justify-center gap-6 mt-8">
+               <a href="https://linkedin.com/in/nithin-n-s-23b3ba290" className="hover:text-red-500 transition transform hover:scale-110">
+                 LinkedIn
+               </a>
+            </div>
+          </div>
+        </motion.div>
+      </section>
+
+      <footer className="bg-black text-neutral-600 py-8 text-center text-sm border-t border-neutral-900">
+        <p>&copy; {new Date().getFullYear()} Nithin NS. Designed with Next.js & Framer Motion.</p>
+      </footer>
+    </div>
+  );
+}
