@@ -1,153 +1,185 @@
+'use client';
+
+import { motion } from 'framer-motion';
+
 export default function Home() {
+  // Animation settings
+  const fadeInUp = {
+    hidden: { opacity: 0, y: 40 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: "easeOut" } }
+  };
+
+  const staggerContainer = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.2 }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-slate-50 text-gray-800 font-sans">
-      <header className="bg-white shadow-sm sticky top-0 z-50">
+    <div className="min-h-screen bg-black text-gray-200 font-sans selection:bg-red-500 selection:text-white">
+      
+      {/* Navigation Bar */}
+      <header className="fixed top-0 w-full bg-black/80 backdrop-blur-md border-b border-red-900/30 z-50">
         <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-blue-700">Nithin N S</h1>
-          <nav className="space-x-6 text-sm font-medium hidden md:block">
-            <a href="#about" className="hover:text-blue-700 transition">About</a>
-            <a href="#skills" className="hover:text-blue-700 transition">Skills</a>
-            <a href="#projects" className="hover:text-blue-700 transition">Projects</a>
-            <a href="#contact" className="hover:text-blue-700 transition">Contact</a>
+          <motion.h1 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="text-2xl font-bold text-red-600 tracking-tighter"
+          >
+            NITHIN <span className="text-white">NS</span>
+          </motion.h1>
+          <nav className="space-x-8 text-sm font-medium hidden md:block">
+            {['About', 'Skills', 'Projects', 'Contact'].map((item) => (
+              <a key={item} href={`#${item.toLowerCase()}`} className="hover:text-red-500 transition-colors duration-300">
+                {item}
+              </a>
+            ))}
           </nav>
         </div>
       </header>
 
       {/* Hero Section */}
-      <section id="about" className="bg-white py-20">
+      <section id="about" className="min-h-screen flex items-center justify-center pt-20">
         <div className="max-w-5xl mx-auto px-6 text-center">
-          <h2 className="text-5xl font-extrabold mb-6 text-slate-900">Hi, I'm Nithin N S</h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Electronics & Communication Engineering Student & Aspiring Data Analyst
-          </p>
-          <p className="text-gray-500 mb-10">
-            BMS Institute of Technology and Management (2022-2026) • CGPA: 7.5
-          </p>
-          <div className="flex justify-center gap-4">
-            <a href="#contact" className="px-8 py-3 bg-blue-700 text-white rounded-full font-semibold hover:bg-blue-800 transition shadow-lg">
+          
+          {/* Profile Image (Optional - ensure profile.jpg is in public folder) */}
+          <motion.div 
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="mb-8 relative inline-block"
+          >
+            <div className="w-32 h-32 rounded-full border-4 border-red-600 shadow-[0_0_30px_rgba(220,38,38,0.5)] overflow-hidden mx-auto bg-neutral-900">
+               {/* Make sure you have a photo named profile.jpg in your public folder, or delete this img tag */}
+               <img src="/profile.jpg" alt="Profile" className="w-full h-full object-cover opacity-90 hover:opacity-100 transition" />
+            </div>
+          </motion.div>
+
+          <motion.h2 
+            initial="hidden"
+            animate="visible"
+            variants={fadeInUp}
+            className="text-5xl md:text-7xl font-extrabold mb-6 text-white tracking-tight"
+          >
+            I'm <span className="text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-800">Nithin NS</span>
+          </motion.h2>
+
+          <motion.p 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 1 }}
+            className="text-xl text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed"
+          >
+            Electronics & Communication Engineer transforming raw data into 
+            <span className="text-red-500 font-semibold"> actionable insights</span>.
+          </motion.p>
+          
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-col md:flex-row justify-center gap-4 items-center"
+          >
+            <a href="#contact" className="px-8 py-3 bg-red-600 text-white rounded-full font-bold hover:bg-red-700 hover:shadow-[0_0_20px_rgba(220,38,38,0.6)] transition duration-300">
               Contact Me
             </a>
-            {/* Resume Button */}
-          <a href="/resume.pdf" download className="px-8 py-3 bg-white text-blue-700 border-2 border-blue-700 rounded-full font-semibold hover:bg-blue-50 transition shadow-lg flex items-center gap-2">
-            <span>Download Resume</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-          </a>
-            <a href="https://linkedin.com/in/nithin-n-s-23b3ba290" target="_blank" className="px-8 py-3 border border-gray-300 rounded-full font-semibold hover:bg-gray-100 transition">
-              LinkedIn
+
+            {/* RESUME BUTTON IS HERE */}
+            <a href="/resume.pdf" download className="px-8 py-3 border border-red-600 text-red-500 rounded-full font-bold hover:bg-red-600 hover:text-white transition duration-300 flex items-center gap-2 group">
+              <span>Download Resume</span>
+              <svg className="w-4 h-4 group-hover:translate-y-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
             </a>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-20 bg-slate-50">
+      <section id="skills" className="py-24 bg-neutral-950">
         <div className="max-w-5xl mx-auto px-6">
-          <h3 className="text-3xl font-bold mb-12 text-center text-slate-800">Technical Arsenal</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100">
-              <h4 className="text-lg font-bold text-blue-700 mb-3">Programming & Data</h4>
-              <p className="text-gray-600">Python, SQL, C++, MATLAB</p>
-            </div>
-            <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100">
-              <h4 className="text-lg font-bold text-blue-700 mb-3">Analytics & Viz</h4>
-              <p className="text-gray-600">Power BI, Tableau, Excel, DAX</p>
-            </div>
-            <div className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-gray-100">
-              <h4 className="text-lg font-bold text-blue-700 mb-3">Soft Skills</h4>
-              <p className="text-gray-600">Analytical Mindset, Problem Solving, Communication</p>
-            </div>
-          </div>
+          <motion.h3 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="text-3xl font-bold mb-16 text-center text-white"
+          >
+            Technical <span className="text-red-600">Arsenal</span>
+          </motion.h3>
+          
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+          >
+            {[
+              { title: "Programming", skills: "Python, SQL, C++, MATLAB" },
+              { title: "Data Visualization", skills: "Power BI, Tableau, Excel, DAX" },
+              { title: "Soft Skills", skills: "Analytical Mindset, Problem Solving" }
+            ].map((skill, index) => (
+              <motion.div 
+                key={index}
+                variants={fadeInUp}
+                className="bg-neutral-900 p-8 rounded-2xl border border-neutral-800 hover:border-red-600 transition duration-300 hover:-translate-y-2"
+              >
+                <h4 className="text-xl font-bold text-red-500 mb-4">{skill.title}</h4>
+                <p className="text-gray-400">{skill.skills}</p>
+              </motion.div>
+            ))}
+          </motion.div>
         </div>
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 bg-white">
+      <section id="projects" className="py-24 bg-black">
         <div className="max-w-5xl mx-auto px-6">
-          <h3 className="text-3xl font-bold mb-12 text-center text-slate-800">Featured Projects</h3>
-          <div className="grid gap-10">
-            
-            {/* Project 1 */}
-            <div className="bg-slate-50 rounded-2xl p-8 border border-gray-100">
-              <div className="flex flex-col md:flex-row justify-between items-start mb-4">
-                <div>
-                  <h4 className="text-2xl font-bold text-slate-900">D-Mart Sales & Customer Insights Dashboard</h4>
-                  <p className="text-blue-600 font-medium mt-1">Tools: SQL, Power BI, Excel</p>
+          <motion.h3 
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            className="text-3xl font-bold mb-16 text-center text-white"
+          >
+            Featured <span className="text-red-600">Projects</span>
+          </motion.h3>
+          
+          <div className="grid gap-12">
+            {[
+              { 
+                title: "D-Mart Sales Insights", 
+                tools: "SQL, Power BI, Excel", 
+                desc: ["End-to-end retail analytics solution.", "Designed normalized SQL schema.", "Built interactive Power BI dashboards."],
+                year: "2025"
+              },
+              { 
+                title: "HR Analytics Dashboard", 
+                tools: "Tableau", 
+                desc: ["Analyzed workforce demographics.", "Created calculated fields for attrition.", "Visualized salary distributions."],
+                year: "2025"
+              },
+              { 
+                title: "Cyber Sentinel (App)", 
+                tools: "Flutter, ML, Dart", 
+                desc: ["Cross-platform threat detection.", "Integrated ML behavioral analytics.", "RSA encryption for security."],
+                year: "Ongoing"
+              }
+            ].map((project, index) => (
+              <motion.div 
+                key={index}
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+                className="group relative bg-neutral-900 rounded-2xl p-8 border border-neutral-800 hover:border-red-900 overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 w-32 h-32 bg-red-600 blur-[100px] opacity-20 group-hover:opacity-40 transition duration-500"></div>
+                
+                <div className="flex flex-col md:flex-row justify-between items-start mb-6 relative z-10">
+                  <div>
+                    <h4 className="text-2xl font-bold text-white group-hover:text-red-500 transition">{project.title}</h4>
+                    <p className="text-red-400 font-mono text-sm mt-2">{project.tools}</p>
+                  </div>
+                  <span className="mt-2 md:mt-0 px-3 py-1 rounded-full text-xs font-bold border border-red-900 text-red-500 bg-red-900/10">
+                    {project.year}
+                  </span>
                 </div>
-                <span className="mt-2 md:mt-0 text-xs font-bold bg-green-100 text-green-800 px-3 py-1 rounded-full">Feb 2025</span>
-              </div>
-              <ul className="list-disc list-inside text-gray-700 space-y-2 mt-4">
-                <li>Developed an end-to-end retail analytics solution to drive business decisions.</li>
-                <li>Designed normalized SQL schema for efficient data collection.</li>
-                <li>Built interactive Power BI dashboards with KPIs and trend analysis.</li>
-              </ul>
-            </div>
-
-            {/* Project 2 */}
-            <div className="bg-slate-50 rounded-2xl p-8 border border-gray-100">
-              <div className="flex flex-col md:flex-row justify-between items-start mb-4">
-                <div>
-                  <h4 className="text-2xl font-bold text-slate-900">HR Analytics Dashboard</h4>
-                  <p className="text-blue-600 font-medium mt-1">Tools: Tableau</p>
-                </div>
-                <span className="mt-2 md:mt-0 text-xs font-bold bg-green-100 text-green-800 px-3 py-1 rounded-full">Sep 2025</span>
-              </div>
-              <ul className="list-disc list-inside text-gray-700 space-y-2 mt-4">
-                <li>Cleaned raw HR datasets and created calculated fields for metrics like attrition rate.</li>
-                <li>Visualized workforce demographics and salary distributions.</li>
-                <li>Provided actionable insights for talent retention and planning.</li>
-              </ul>
-            </div>
-
-            {/* Project 3 */}
-            <div className="bg-slate-50 rounded-2xl p-8 border border-gray-100">
-              <div className="flex flex-col md:flex-row justify-between items-start mb-4">
-                <div>
-                  <h4 className="text-2xl font-bold text-slate-900">Cyber Sentinel (App)</h4>
-                  <p className="text-blue-600 font-medium mt-1">Tools: Flutter, Dart, Machine Learning</p>
-                </div>
-                <span className="mt-2 md:mt-0 text-xs font-bold bg-blue-100 text-blue-800 px-3 py-1 rounded-full">Ongoing</span>
-              </div>
-              <ul className="list-disc list-inside text-gray-700 space-y-2 mt-4">
-                <li>Developing a cross-platform mobile app for threat detection using ML.</li>
-                <li>Integrating ML models for behavioral analytics to identify trends.</li>
-                <li>Implementing RSA/OAEP encryption for secure communication.</li>
-              </ul>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      {/* Certifications Section */}
-      <section className="py-20 bg-slate-50">
-        <div className="max-w-5xl mx-auto px-6 text-center">
-          <h3 className="text-3xl font-bold mb-10 text-slate-800">Certifications</h3>
-          <div className="flex flex-wrap justify-center gap-4">
-            {['Data Analytics (Infosys)', 'AWS APAC Solutions Architecture', 'Web Development (Fliprlabs)', 'Data Analytics (Deloitte)'].map((cert) => (
-              <span key={cert} className="bg-white px-6 py-3 rounded-xl shadow-sm text-gray-700 font-medium border border-gray-200">
-                {cert}
-              </span>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Section */}
-      <section id="contact" className="py-24 bg-blue-700 text-white text-center">
-        <h2 className="text-3xl font-bold mb-6">Let's Connect</h2>
-        <p className="mb-10 max-w-xl mx-auto text-blue-100 text-lg">
-          I am actively looking for opportunities in Data Analytics. Feel free to reach out!
-        </p>
-        <div className="space-y-4 text-lg">
-          <p className="font-semibold">nithinns1402@gmail.com</p>
-          <p className="font-semibold">+91-6364348530</p>
-          <p className="text-blue-200">Bangalore, Karnataka, India</p>
-        </div>
-      </section>
-
-      <footer className="bg-slate-900 text-slate-500 py-8 text-center text-sm">
-        <p>&copy; {new Date().getFullYear()} Nithin NS. Built with Next.js & Tailwind.</p>
-      </footer>
-    </div>
-  );
-}
